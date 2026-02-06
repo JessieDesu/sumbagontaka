@@ -12,60 +12,81 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: #0f0f14;
-      color: #ffffff;
+      background: #ffc0cb; /* pink */
+      color: #2b2b2b;
       text-align: center;
     }
     .container {
       padding: 24px;
     }
+    .top-text {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
     #countdown {
-      font-size: 2rem;
+      font-size: 2.5rem;
       letter-spacing: 2px;
     }
     #qr {
       display: none;
+      margin-top: 20px;
+    }
+    .birthday {
+      font-family: "Brush Script MT", "Comic Sans MS", cursive;
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+    }
+    .scan {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
     }
     img {
       max-width: 260px;
-      margin-top: 20px;
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="countdown">Loading countdown…</div>
+    <div class="top-text">THE BOXING RING WILL OPEN AT</div>
+    <div id="countdown">01:00</div>
+
     <div id="qr">
-      <h2>Scan the QR Code</h2>
+      <div class="birthday">Happy Birthday</div>
+      <div class="scan">SCAN HERE</div>
       <img src="placeholder-qr.png" alt="QR Code" />
     </div>
   </div>
 
+  <!-- Tick sound -->
+  <audio id="tickSound" src="tick.mp3" preload="auto"></audio>
+
   <script>
-    // Target date locked to Philippines time (UTC+08:00)
-    // February 8, 2026 00:00 in PH = February 7, 2026 16:00 UTC
-    const targetDate = new Date('2026-02-07T16:00:00Z').getTime();
+    // 1-minute countdown for testing
+    let remainingTime = 60; // seconds
 
     const countdownEl = document.getElementById('countdown');
     const qrEl = document.getElementById('qr');
+    const tickSound = document.getElementById('tickSound');
 
     function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
 
-      if (distance <= 0) {
+      countdownEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      if (remainingTime > 0) {
+        tickSound.currentTime = 0;
+        tickSound.play().catch(() => {}); // ignore autoplay restrictions
+        remainingTime--;
+      } else {
         countdownEl.style.display = 'none';
         qrEl.style.display = 'block';
         clearInterval(timer);
-        return;
       }
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
     updateCountdown();
