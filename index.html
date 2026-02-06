@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sumbagontaka.com</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #0f0f14;
+      color: #ffffff;
+      text-align: center;
+    }
+    .container {
+      padding: 24px;
+    }
+    #countdown {
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+    #qr {
+      display: none;
+    }
+    img {
+      max-width: 260px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="countdown">Loading countdown…</div>
+    <div id="qr">
+      <h2>Scan the QR Code</h2>
+      <img src="placeholder-qr.png" alt="QR Code" />
+    </div>
+  </div>
+
+  <script>
+    // Target date locked to Philippines time (UTC+08:00)
+    // February 8, 2026 00:00 in PH = February 7, 2026 16:00 UTC
+    const targetDate = new Date('2026-02-07T16:00:00Z').getTime();
+
+    const countdownEl = document.getElementById('countdown');
+    const qrEl = document.getElementById('qr');
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        countdownEl.style.display = 'none';
+        qrEl.style.display = 'block';
+        clearInterval(timer);
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
